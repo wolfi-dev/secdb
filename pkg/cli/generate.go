@@ -15,17 +15,22 @@
 package cli
 
 import (
+	_ "chainguard.dev/wolfi-secdb/pkg/types"
+
 	"github.com/spf13/cobra"
 )
 
-func New() *cobra.Command {
+func Generate() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:               "wolfi-secdb",
-		DisableAutoGenTag: true,
-		SilenceUsage:      true,
+		Use: "generate",
+		Short: "Generate a security database",
+		Long: "Generate a security database.",
+		Example: "  wolfi-secdb generate ./repo ...",
+		Args: cobra.MinimumNArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return nil
+		},
 	}
-
-	cmd.AddCommand(Generate())
 
 	return cmd
 }
