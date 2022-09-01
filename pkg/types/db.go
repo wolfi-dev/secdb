@@ -18,15 +18,16 @@ import (
 	"fmt"
 	"os"
 
-	"gitlab.alpinelinux.org/alpine/go/pkg/apkbuild"
 	"gopkg.in/yaml.v3"
 )
 
 // TODO(kaniini): Harmonize these types with alpine's secdb implementation
 // and place the implementation in alpine-go.
+type Secfixes map[string][]string
+
 type Package struct {
-	Name     string            `json:"name"`
-	Secfixes apkbuild.Secfixes `json:"secfixes"`
+	Name     string   `json:"name"`
+	Secfixes Secfixes `json:"secfixes"`
 }
 
 type PackageEntry struct {
@@ -47,13 +48,22 @@ type MelangePackage struct {
 		Version string `yaml:"version"`
 		Epoch   int    `yaml:"epoch"`
 	} `yaml:"package"`
-	Secfixes apkbuild.Secfixes `yaml:"secfixes"`
+	Secfixes Secfixes `yaml:"secfixes"`
 }
 
 // Identity returns the package identity triple as apk-tools expects
 // it to be, e.g. `[name]-[version]-r[epoch].`
 func (mp MelangePackage) Identity() string {
 	return fmt.Sprintf("%s-%s-r%d", mp.Package.Name, mp.Package.Version, mp.Package.Epoch)
+}
+
+func (mp MelangePackage) Entry() PackageEntry {
+	return PackageEntry{
+		Pkg: Package{
+			Name:     mp.Package.Name,
+			Secfixes: mp.Secfixes,
+		},
+	}
 }
 
 // LoadMelangePackage loads a Melange source package YAML file
