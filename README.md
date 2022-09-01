@@ -9,8 +9,9 @@ can do something like:
 
 ```shell
 $ wolfi-secdb generate ./path/to/source-repo \
-   --baseurl https://packages.wolfi.dev/... \
-   --output security/repo-name.json
+   --base-url https://packages.wolfi.dev/... \
+   --output-filename security/your-repo-name.json \
+   --repo-name your-repo-name
 ```
 
 For the Wolfi distribution, there is a GitHub action
