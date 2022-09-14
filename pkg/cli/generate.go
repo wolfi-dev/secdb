@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"chainguard.dev/wolfi-secdb/pkg/types"
 
@@ -74,6 +75,10 @@ func (c *Context) ProcessDir(dir string) error {
 	}
 
 	for _, file := range files {
+		if !strings.HasSuffix(file.Name(), ".yaml") {
+			continue
+		}
+
 		mp, err := types.LoadMelangePackage(filepath.Join(dir, file.Name()))
 		if err != nil {
 			return fmt.Errorf("loading %s: %w", file.Name(), err)
