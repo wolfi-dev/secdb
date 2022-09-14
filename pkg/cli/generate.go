@@ -84,6 +84,10 @@ func (c *Context) ProcessDir(dir string) error {
 			return fmt.Errorf("loading %s: %w", file.Name(), err)
 		}
 
+		if len(mp.Secfixes) == 0 {
+			continue
+		}
+
 		c.DB.Packages = append(c.DB.Packages, mp.Entry())
 	}
 
