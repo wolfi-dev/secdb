@@ -15,10 +15,22 @@
 package types
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"strings"
+	"text/template"
 
+	"github.com/Masterminds/sprig/v3"
 	"gopkg.in/yaml.v3"
+)
+
+const (
+	substitutionPackageName    = "${{package.name}}"
+	substitutionPackageVersion = "${{package.version}}"
+	substitutionPackageEpoch   = "${{package.epoch}}"
+	substitutionTargetsDestdir = "${{targets.destdir}}"
+	substitutionSubPkgDir      = "${{targets.subpkgdir}}"
 )
 
 // TODO(kaniini): Harmonize these types with alpine's secdb implementation
@@ -66,6 +78,47 @@ func (mp MelangePackage) Entry() PackageEntry {
 	}
 }
 
+func substitutionReplacements() map[string]string {
+	return map[string]string{
+		substitutionPackageName:    "MELANGE_TEMP_REPLACEMENT_PACAKAGE_NAME",
+		substitutionPackageVersion: "MELANGE_TEMP_REPLACEMENT_PACAKAGE_VERSION",
+		substitutionPackageEpoch:   "MELANGE_TEMP_REPLACEMENT_PACAKAGE_EPOCH",
+		substitutionTargetsDestdir: "MELANGE_TEMP_REPLACEMENT_DESTDIR",
+		substitutionSubPkgDir:      "MELANGE_TEMP_REPLACEMENT_SUBPKGDIR",
+	}
+}
+
+func applyTemplate(contents []byte) ([]byte, error) {
+	// First, replace all protected pipeline templated vars temporarily
+	// So that we can apply the Go template
+	// We have to do this bc go templates doesn't support ignoring certain fields: https://github.com/golang/go/issues/31147
+
+	sr := substitutionReplacements()
+
+	protected := string(contents)
+	for k, v := range sr {
+		protected = strings.ReplaceAll(protected, k, v)
+	}
+
+	tmpl, err := template.New("").Funcs(sprig.TxtFuncMap()).Parse(protected)
+	if err != nil {
+		return nil, err
+	}
+	tmpl = tmpl.Option("missingkey=error")
+	buf := bytes.NewBuffer([]byte{})
+	if err := tmpl.Execute(buf, nil); err != nil {
+		return nil, err
+	}
+
+	// Add the pipeline templating back in
+	templateApplied := buf.String()
+	for k, v := range sr {
+		templateApplied = strings.ReplaceAll(templateApplied, v, k)
+	}
+
+	return []byte(templateApplied), nil
+}
+
 // LoadMelangePackage loads a Melange source package YAML file
 // and extracts the Secfixes data from it.
 func LoadMelangePackage(fileName string) (*MelangePackage, error) {
@@ -74,8 +127,13 @@ func LoadMelangePackage(fileName string) (*MelangePackage, error) {
 		return nil, err
 	}
 
+	tmplData, err := applyTemplate(fileData)
+	if err != nil {
+		return nil, err
+	}
+
 	pkg := &MelangePackage{}
-	if err := yaml.Unmarshal(fileData, pkg); err != nil {
+	if err := yaml.Unmarshal(tmplData, pkg); err != nil {
 		return nil, err
 	}
 
