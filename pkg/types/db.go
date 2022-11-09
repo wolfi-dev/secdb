@@ -26,11 +26,13 @@ import (
 )
 
 const (
-	substitutionPackageName    = "${{package.name}}"
-	substitutionPackageVersion = "${{package.version}}"
-	substitutionPackageEpoch   = "${{package.epoch}}"
-	substitutionTargetsDestdir = "${{targets.destdir}}"
-	substitutionSubPkgDir      = "${{targets.subpkgdir}}"
+	substitutionPackageName     = "${{package.name}}"
+	substitutionPackageVersion  = "${{package.version}}"
+	substitutionPackageEpoch    = "${{package.epoch}}"
+	substitutionTargetsDestdir  = "${{targets.destdir}}"
+	substitutionSubPkgDir       = "${{targets.subpkgdir}}"
+	substitutionHostTripletGnu  = "${{host.triplet.gnu}}"
+	substitutionHostTripletRust = "${{host.triplet.rust}}"
 )
 
 // TODO(kaniini): Harmonize these types with alpine's secdb implementation
@@ -80,11 +82,13 @@ func (mp MelangePackage) Entry() PackageEntry {
 
 func substitutionReplacements() map[string]string {
 	return map[string]string{
-		substitutionPackageName:    "MELANGE_TEMP_REPLACEMENT_PACAKAGE_NAME",
-		substitutionPackageVersion: "MELANGE_TEMP_REPLACEMENT_PACAKAGE_VERSION",
-		substitutionPackageEpoch:   "MELANGE_TEMP_REPLACEMENT_PACAKAGE_EPOCH",
-		substitutionTargetsDestdir: "MELANGE_TEMP_REPLACEMENT_DESTDIR",
-		substitutionSubPkgDir:      "MELANGE_TEMP_REPLACEMENT_SUBPKGDIR",
+		substitutionPackageName:     "MELANGE_TEMP_REPLACEMENT_PACAKAGE_NAME",
+		substitutionPackageVersion:  "MELANGE_TEMP_REPLACEMENT_PACAKAGE_VERSION",
+		substitutionPackageEpoch:    "MELANGE_TEMP_REPLACEMENT_PACAKAGE_EPOCH",
+		substitutionTargetsDestdir:  "MELANGE_TEMP_REPLACEMENT_DESTDIR",
+		substitutionSubPkgDir:       "MELANGE_TEMP_REPLACEMENT_SUBPKGDIR",
+		substitutionHostTripletGnu:  "MELANGE_TEMP_REPLACEMENT_HOST_TRIPLET_GNU",
+		substitutionHostTripletRust: "MELANGE_TEMP_REPLACEMENT_HOST_TRIPLET_RUST",
 	}
 }
 
