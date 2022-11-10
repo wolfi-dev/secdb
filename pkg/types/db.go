@@ -26,13 +26,15 @@ import (
 )
 
 const (
-	substitutionPackageName     = "${{package.name}}"
-	substitutionPackageVersion  = "${{package.version}}"
-	substitutionPackageEpoch    = "${{package.epoch}}"
-	substitutionTargetsDestdir  = "${{targets.destdir}}"
-	substitutionSubPkgDir       = "${{targets.subpkgdir}}"
-	substitutionHostTripletGnu  = "${{host.triplet.gnu}}"
-	substitutionHostTripletRust = "${{host.triplet.rust}}"
+	substitutionPackageName          = "${{package.name}}"
+	substitutionPackageVersion       = "${{package.version}}"
+	substitutionPackageEpoch         = "${{package.epoch}}"
+	substitutionTargetsDestdir       = "${{targets.destdir}}"
+	substitutionSubPkgDir            = "${{targets.subpkgdir}}"
+	substitutionHostTripletGnu       = "${{host.triplet.gnu}}"
+	substitutionHostTripletRust      = "${{host.triplet.rust}}"
+	substitutionCrossTripletGnuGlibc = "${{cross.triplet.gnu.glibc}}"
+	substitutionCrossTripletGnuMusl  = "${{cross.triplet.gnu.musl}}"
 )
 
 // TODO(kaniini): Harmonize these types with alpine's secdb implementation
@@ -82,13 +84,15 @@ func (mp MelangePackage) Entry() PackageEntry {
 
 func substitutionReplacements() map[string]string {
 	return map[string]string{
-		substitutionPackageName:     "MELANGE_TEMP_REPLACEMENT_PACAKAGE_NAME",
-		substitutionPackageVersion:  "MELANGE_TEMP_REPLACEMENT_PACAKAGE_VERSION",
-		substitutionPackageEpoch:    "MELANGE_TEMP_REPLACEMENT_PACAKAGE_EPOCH",
-		substitutionTargetsDestdir:  "MELANGE_TEMP_REPLACEMENT_DESTDIR",
-		substitutionSubPkgDir:       "MELANGE_TEMP_REPLACEMENT_SUBPKGDIR",
-		substitutionHostTripletGnu:  "MELANGE_TEMP_REPLACEMENT_HOST_TRIPLET_GNU",
-		substitutionHostTripletRust: "MELANGE_TEMP_REPLACEMENT_HOST_TRIPLET_RUST",
+		substitutionPackageName:          "MELANGE_TEMP_REPLACEMENT_PACAKAGE_NAME",
+		substitutionPackageVersion:       "MELANGE_TEMP_REPLACEMENT_PACAKAGE_VERSION",
+		substitutionPackageEpoch:         "MELANGE_TEMP_REPLACEMENT_PACAKAGE_EPOCH",
+		substitutionTargetsDestdir:       "MELANGE_TEMP_REPLACEMENT_DESTDIR",
+		substitutionSubPkgDir:            "MELANGE_TEMP_REPLACEMENT_SUBPKGDIR",
+		substitutionHostTripletGnu:       "MELANGE_TEMP_REPLACEMENT_HOST_TRIPLET_GNU",
+		substitutionHostTripletRust:      "MELANGE_TEMP_REPLACEMENT_HOST_TRIPLET_RUST",
+		substitutionCrossTripletGnuGlibc: "MELANGE_TEMP_REPLACEMENT_CROSS_TRIPLET_GNU_GLIBC",
+		substitutionCrossTripletGnuMusl:  "MELANGE_TEMP_REPLACEMENT_CROSS_TRIPLET_GNU_MUSL",
 	}
 }
 
