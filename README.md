@@ -1,4 +1,8 @@
-# wolfi-secdb
+# wolfi-secdb (ARCHIVED)
+
+
+> [!WARNING]
+> This project is no longer maintained and should not be used. This tool has been replaced by functionality in [wolfictl](https://github.com/wolfi-dev/wolfictl) (see [docs](https://github.com/wolfi-dev/wolfictl/blob/main/docs/cmd/wolfictl_advisory_secdb.md) and [code](https://github.com/wolfi-dev/wolfictl/blob/67ec79d08a5942d7881ddf6556da6306ce2914ce/pkg/advisory/secdb.go#L31)).
 
 Tool for generating Wolfi security databases
 
